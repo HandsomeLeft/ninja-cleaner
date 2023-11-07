@@ -1,6 +1,6 @@
 {
   "name": "ninja-cleaner",
-  "version": "0.0.4-beta",
+  "version": "0.0.5-beta",
   "description": "A code cleaner built with JavaScript",
   "author": "ceaser",
   "main": "index.js",

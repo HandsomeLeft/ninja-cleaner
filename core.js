@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 const fs = require("fs");
 const path = require("path");
+const { Logger } = require("./logger");
 
-let globalLog = [];
+let logger = new Logger();
 
 const strategies = {
   directory: (filePath) => {
@@ -27,12 +28,6 @@ function processDirectory(directoryPath) {
       processFile(filePath);
     }
   }
-
-  globalLog.forEach(log => {
-    console.log(`File: ${log.file}`);
-    console.log(`Time: ${log.time}`);
-    console.log(`Removed statements: ${log.statements.join(", ")}`);
-  });
 }
 
 function processFile(filePath) {
@@ -44,11 +39,7 @@ function processFile(filePath) {
   });
   fs.writeFileSync(filePath, content);
   if (logStatements.length > 0) {
-    globalLog.push({
-      file: filePath,
-      time: new Date().toISOString(),
-      statements: logStatements
-    });
+    logger.addLog(filePath, logStatements);
   }
 }
 
@@ -62,6 +53,7 @@ function processPath(filePath) {
   }
   const strategy = strategies[type];
   strategy(filePath);
+  logger.printLogs();
 }
 
 module.exports = {

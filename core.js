@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 const fs = require("fs");
 const path = require("path");
+
+let globalLog = [];
+
 const strategies = {
   directory: (filePath) => {
     processDirectory(filePath);
@@ -24,12 +27,29 @@ function processDirectory(directoryPath) {
       processFile(filePath);
     }
   }
+
+  globalLog.forEach(log => {
+    console.log(`File: ${log.file}`);
+    console.log(`Time: ${log.time}`);
+    console.log(`Removed statements: ${log.statements.join(", ")}`);
+  });
 }
 
 function processFile(filePath) {
   let content = fs.readFileSync(filePath, "utf8");
-  content = content.replace(/console\.log\(.*?\);?/g, "");
+  let logStatements = [];
+  content = content.replace(/console\.log\(.*?\);\n?/g, (match) => {
+    logStatements.push(match);
+    return "";
+  });
   fs.writeFileSync(filePath, content);
+  if (logStatements.length > 0) {
+    globalLog.push({
+      file: filePath,
+      time: new Date().toISOString(),
+      statements: logStatements
+    });
+  }
 }
 
 function processPath(filePath) {
@@ -44,7 +64,6 @@ function processPath(filePath) {
   strategy(filePath);
 }
 
-//导出
 module.exports = {
   processPath,
 };

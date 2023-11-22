@@ -32,15 +32,15 @@ function processDirectory(directoryPath) {
 
 function processFile(filePath) {
   let content = fs.readFileSync(filePath, "utf8");
-  let logStatements = [];
-  content = content.replace(/console\.log\(.*?\);\n?/g, (match) => {
-    logStatements.push(match);
-    return "";
+  let lines = content.split('\n');
+  lines.forEach((line, index) => {
+    let match = line.match(/console\.log\(.*?\);\n?/);
+    if (match) {
+      logger.addLog(filePath, match[0], index + 1);
+      lines[index] = line.replace(match[0], '');
+    }
   });
-  fs.writeFileSync(filePath, content);
-  if (logStatements.length > 0) {
-    logger.addLog(filePath, logStatements);
-  }
+  fs.writeFileSync(filePath, lines.join('\n'));
 }
 
 function processPath(filePath) {

@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { Logger } = require("./logger");
 
-let logger = new Logger();
+const logger = new Logger();
 
 const strategies = {
   directory: (filePath) => {
@@ -13,13 +13,13 @@ const strategies = {
     processFile(filePath);
   },
   unknown: () => {
-    console.error("Invalid file path");
+    console.error("无效的文件路径");
   },
 };
 
+
 function processDirectory(directoryPath) {
-  let files = fs.readdirSync(directoryPath);
-  for (let file of files) {
+  for (let file of fs.readdirSync(directoryPath)) {
     let filePath = path.join(directoryPath, file);
     let stats = fs.statSync(filePath);
     if (stats.isDirectory()) {
@@ -29,6 +29,7 @@ function processDirectory(directoryPath) {
     }
   }
 }
+
 
 function processFile(filePath) {
   let content = fs.readFileSync(filePath, "utf8");

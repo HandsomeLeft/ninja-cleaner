@@ -28,6 +28,7 @@ async function processDirectory(directoryPath) {
       await processFile(filePath);
     }
   }
+  console.log(1);
 }
 
 async function processFile(filePath) {

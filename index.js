@@ -7,8 +7,12 @@ program
  .command("clean")
  .description("clean the specified file｜指定清理你的文件")
  .action(() => {
-   const filePath = process.cwd(); // 直接使用 process.cwd() 获取当前工作目录
-   processPath(filePath);
+   try {
+     const filePath = process.cwd();
+     processPath(filePath);
+   } catch (error) {
+     console.error('Error during file cleaning:', error.message);
+   }
  });
 
 program.version(require("./package.json").version);

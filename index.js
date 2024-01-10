@@ -11,7 +11,7 @@ program
      const filePath = process.cwd();
      processPath(filePath);
    } catch (error) {
-     console.error('Error during file cleaning:', error.message);
+     console.error('Error during file cleaning', error.message);
    }
  });
 
